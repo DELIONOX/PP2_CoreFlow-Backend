@@ -22,6 +22,30 @@ namespace CoreFlow_Backend.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("CoreFlow_Backend.Models.Categoria", b =>
+                {
+                    b.Property<int>("IdCategoria")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCategoria"));
+
+                    b.Property<bool>("Activa")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NombreCategoria")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IdCategoria");
+
+                    b.ToTable("Categorias");
+                });
+
             modelBuilder.Entity("CoreFlow_Backend.Models.Cliente", b =>
                 {
                     b.Property<int>("IdCliente")
@@ -91,6 +115,9 @@ namespace CoreFlow_Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("IdCategoria")
+                        .HasColumnType("int");
+
                     b.Property<int>("IdProveedor")
                         .HasColumnType("int");
 
@@ -105,6 +132,8 @@ namespace CoreFlow_Backend.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("IdProducto");
+
+                    b.HasIndex("IdCategoria");
 
                     b.HasIndex("IdProveedor");
 
@@ -142,13 +171,31 @@ namespace CoreFlow_Backend.Migrations
 
             modelBuilder.Entity("CoreFlow_Backend.Models.Producto", b =>
                 {
-                    b.HasOne("CoreFlow_Backend.Models.Proveedor", "Proveedor")
-                        .WithMany()
-                        .HasForeignKey("IdProveedor")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("CoreFlow_Backend.Models.Categoria", "Categoria")
+                        .WithMany("Productos")
+                        .HasForeignKey("IdCategoria")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("CoreFlow_Backend.Models.Proveedor", "Proveedor")
+                        .WithMany("Productos")
+                        .HasForeignKey("IdProveedor")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Categoria");
+
                     b.Navigation("Proveedor");
+                });
+
+            modelBuilder.Entity("CoreFlow_Backend.Models.Categoria", b =>
+                {
+                    b.Navigation("Productos");
+                });
+
+            modelBuilder.Entity("CoreFlow_Backend.Models.Proveedor", b =>
+                {
+                    b.Navigation("Productos");
                 });
 #pragma warning restore 612, 618
         }

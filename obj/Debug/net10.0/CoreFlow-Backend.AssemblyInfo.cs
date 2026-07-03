@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CoreFlow-Backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e0efe414d23bfae93762ce53cc352f6032e68d03")]
 [assembly: System.Reflection.AssemblyProductAttribute("CoreFlow-Backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CoreFlow-Backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

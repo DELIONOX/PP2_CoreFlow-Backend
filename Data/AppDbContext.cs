@@ -9,21 +9,42 @@ namespace CoreFlow_Backend.Data
         {
         }
 
+        // =====================================
+        // DbSets (Tablas)
+        // =====================================
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Proveedor> Proveedores { get; set; }
+        public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Producto> Productos { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
 
-        // Método para mapear las claves explícitamente
+        // =====================================
+        // Configuración del Modelo (Fluent API)
+        // =====================================
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Clave primaria para cada una de las tablas
+            // Claves primarias
             modelBuilder.Entity<Cliente>().HasKey(c => c.IdCliente);
             modelBuilder.Entity<Proveedor>().HasKey(p => p.IdProveedor);
-            modelBuilder.Entity<Producto>().HasKey(pr => pr.IdProducto);
-            modelBuilder.Entity<Pedido>().HasKey(pe => pe.IdPedido);
+            modelBuilder.Entity<Categoria>().HasKey(c => c.IdCategoria);
+            modelBuilder.Entity<Producto>().HasKey(p => p.IdProducto);
+            modelBuilder.Entity<Pedido>().HasKey(p => p.IdPedido);
+
+            // Relación Producto -> Proveedor
+            modelBuilder.Entity<Producto>()
+                .HasOne(p => p.Proveedor)
+                .WithMany(pr => pr.Productos)
+                .HasForeignKey(p => p.IdProveedor)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Relación Producto -> Categoría
+            modelBuilder.Entity<Producto>()
+                .HasOne(p => p.Categoria)
+                .WithMany(c => c.Productos)
+                .HasForeignKey(p => p.IdCategoria)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

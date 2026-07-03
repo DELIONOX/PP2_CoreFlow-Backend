@@ -159,3 +159,4 @@ C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend
 C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\obj\Debug\net10.0\CoreFlow-Backend.pdb
 C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\obj\Debug\net10.0\CoreFlow-Backend.genruntimeconfig.cache
 C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\obj\Debug\net10.0\ref\CoreFlow-Backend.dll
+C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\obj\Debug\net10.0\CoreFlow-Backend.sourcelink.json
