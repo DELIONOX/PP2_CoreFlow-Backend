@@ -144,6 +144,7 @@ C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend
 C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\obj\Debug\net10.0\CoreFlow-Backend.csproj.CoreCompileInputs.cache
 C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\obj\Debug\net10.0\CoreFlow-Backend.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\obj\Debug\net10.0\CoreFlow-Backend.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\obj\Debug\net10.0\CoreFlow-Backend.sourcelink.json
 C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\obj\Debug\net10.0\rjimswa.dswa.cache.json
 C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
 C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
@@ -159,4 +160,3 @@ C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend
 C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\obj\Debug\net10.0\CoreFlow-Backend.pdb
 C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\obj\Debug\net10.0\CoreFlow-Backend.genruntimeconfig.cache
 C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\obj\Debug\net10.0\ref\CoreFlow-Backend.dll
-C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\obj\Debug\net10.0\CoreFlow-Backend.sourcelink.json
