@@ -5,27 +5,28 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // =====================================
-// CORS de Angular
+// Configurar Puerto Dinámico para Producción
+// =====================================
+var puerto = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+builder.WebHost.UseUrls($"http://*:{puerto}");
+
+// =====================================
+// CORS configurados para Desarrollo y Producción
 // =====================================
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("PermitirAngular", policy =>
     {
-        policy.WithOrigins("http://localhost:4200")
+        policy.WithOrigins("http://localhost:4200", "https://tu-app-angular.up.railway.app")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
 });
 
 // =====================================
-// Controllers
+// Controllers & Servicios
 // =====================================
 builder.Services.AddControllers();
-
-// =====================================
-// Servicios
-// =====================================
-
 builder.Services.AddScoped<ClienteService>();
 builder.Services.AddScoped<ProveedorService>();
 builder.Services.AddScoped<CategoriaService>();
@@ -36,9 +37,7 @@ builder.Services.AddScoped<PedidoService>();
 // Conexión con SQL Server
 // =====================================
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("Conexion")
-    )
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Conexion"))
 );
 
 // =====================================
@@ -50,15 +49,13 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // =====================================
-// Entorno de desarrollo
+// Pipeline de la Aplicación (Middleware)
 // =====================================
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); // Comentado temporalmente para evitar bucles en producción
+
 app.UseCors("PermitirAngular");
 app.UseAuthorization();
 app.MapControllers();
