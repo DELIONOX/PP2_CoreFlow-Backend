@@ -5,19 +5,13 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // =====================================
-// Configurar Puerto Dinámico para Producción
-// =====================================
-var puerto = Environment.GetEnvironmentVariable("PORT") ?? "5000";
-builder.WebHost.UseUrls($"http://*:{puerto}");
-
-// =====================================
-// CORS configurados para Desarrollo y Producción
+// CORS de Angular (Adaptado para Render)
 // =====================================
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("PermitirAngular", policy =>
     {
-        policy.WithOrigins("http://localhost:4200", "https://tu-app-angular.up.railway.app")
+        policy.WithOrigins("http://localhost:4200", "https://tu-app-angular.onrender.com")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -54,7 +48,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-// app.UseHttpsRedirection(); // Comentado temporalmente para evitar bucles en producción
+// app.UseHttpsRedirection(); // Comentado: Render maneja la terminación SSL de forma externa
 
 app.UseCors("PermitirAngular");
 app.UseAuthorization();
