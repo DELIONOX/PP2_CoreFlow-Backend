@@ -1,13 +1,15 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-# Copia los archivos del proyecto apuntando directamente a la estructura
-COPY CoreFlow_Backend.csproj ./
+# Busca y copia el archivo .csproj dentro de cualquier subcarpeta
+COPY **/CoreFlow_Backend.csproj ./
 RUN dotnet restore
 
-# Copia el resto del código
+# Copia todo el código fuente
 COPY . ./
-RUN dotnet publish "CoreFlow_Backend.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+# Publica especificando la ruta correcta del archivo
+RUN dotnet publish **/CoreFlow_Backend.csproj -c Release -o /app/publish /p:UseAppHost=false
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
