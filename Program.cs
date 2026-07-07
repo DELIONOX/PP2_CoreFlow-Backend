@@ -32,13 +32,22 @@ builder.Services.AddScoped<ProductoService>();
 builder.Services.AddScoped<PedidoService>();
 
 // =====================================
-// Conexión con SQL Server
+// Conexión con la Base de Datos
 // =====================================
+
+// >>> ACTIVO: Configuración para PostgreSQL <<<
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(
+    options.UseNpgsql(
         builder.Configuration.GetConnectionString("Conexion")
     )
 );
+
+// >>> COMENTADO: Configuración anterior para SQL Server <<<
+// builder.Services.AddDbContext<AppDbContext>(options =>
+//     options.UseSqlServer(
+//         builder.Configuration.GetConnectionString("Conexion")
+//     )
+// );
 
 // =====================================
 // Swagger

@@ -39,6 +39,8 @@ C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend
 C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\bin\Debug\net10.0\Microsoft.VisualStudio.SolutionPersistence.dll
 C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\bin\Debug\net10.0\Mono.TextTemplating.dll
 C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\bin\Debug\net10.0\Newtonsoft.Json.dll
+C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\bin\Debug\net10.0\Npgsql.dll
+C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\bin\Debug\net10.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\bin\Debug\net10.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\jonat\OneDrive\Documentos\Proyectos de VS code\ANGULAR\CoreFlow-Backend\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
