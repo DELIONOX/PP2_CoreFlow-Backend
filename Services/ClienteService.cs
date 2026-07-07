@@ -1,6 +1,7 @@
 using CoreFlow_Backend.Data;
 using CoreFlow_Backend.Models;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace CoreFlow_Backend.Services
 {
@@ -13,26 +14,31 @@ namespace CoreFlow_Backend.Services
             _context = context;
         }
 
-        //GET
+        // =====================================
+        // Métodos de Consulta (Queries)
+        // =====================================
+
         public async Task<List<Cliente>> ObtenerTodos()
         {
             return await _context.Clientes.ToListAsync();
         }
 
-        //GET ID
         public async Task<Cliente?> ObtenerPorId(int id)
         {
             return await _context.Clientes.FindAsync(id);
         }
 
-        //POST
+        // =====================================
+        // Métodos de Persistencia (Mutaciones)
+        // =====================================
+
         public async Task<Cliente> Crear(Cliente cliente)
         {
-            var existeCorreo = await _context.Clientes
-                .AnyAsync(c => c.Correo == cliente.Correo);
+            var existeCorreo = await _context.Clientes.AnyAsync(c => c.Correo == cliente.Correo);
+
             if (existeCorreo)
             {
-                throw new Exception("Ya existe un cliente con ese correo.");
+                throw new ValidationException("Ya existe un cliente con ese correo.");
             }
 
             _context.Clientes.Add(cliente);
@@ -40,20 +46,20 @@ namespace CoreFlow_Backend.Services
             return cliente;
         }
 
-        //PUT
         public async Task<bool> Actualizar(int id, Cliente cliente)
         {
             var clienteExistente = await _context.Clientes.FindAsync(id);
+
             if (clienteExistente == null)
             {
                 return false;
             }
-            var existeCorreo = await _context.Clientes.AnyAsync(c =>
-                c.Correo == cliente.Correo &&
-                c.IdCliente != id);
+
+            var existeCorreo = await _context.Clientes.AnyAsync(c => c.Correo == cliente.Correo && c.IdCliente != id);
+
             if (existeCorreo)
             {
-                throw new Exception("Ya existe un cliente con ese correo.");
+                throw new ValidationException("Ya existe un cliente con ese correo.");
             }
 
             clienteExistente.Nombre = cliente.Nombre;
@@ -65,14 +71,22 @@ namespace CoreFlow_Backend.Services
             return true;
         }
 
-        //DELETE
         public async Task<bool> Eliminar(int id)
         {
             var cliente = await _context.Clientes.FindAsync(id);
+
             if (cliente == null)
             {
                 return false;
             }
+
+            bool tienePedidos = await _context.Pedidos.AnyAsync(p => p.IdCliente == id);
+
+            if (tienePedidos)
+            {
+                throw new ValidationException("No se puede eliminar el cliente porque tiene pedidos registrados.");
+            }
+
             _context.Clientes.Remove(cliente);
             await _context.SaveChangesAsync();
             return true;

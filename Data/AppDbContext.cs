@@ -25,25 +25,39 @@ namespace CoreFlow_Backend.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Claves primarias
+            // Claves Primarias
             modelBuilder.Entity<Cliente>().HasKey(c => c.IdCliente);
             modelBuilder.Entity<Proveedor>().HasKey(p => p.IdProveedor);
             modelBuilder.Entity<Categoria>().HasKey(c => c.IdCategoria);
             modelBuilder.Entity<Producto>().HasKey(p => p.IdProducto);
             modelBuilder.Entity<Pedido>().HasKey(p => p.IdPedido);
 
-            // Relación Producto -> Proveedor
+            // Relación: Producto -> Proveedor
             modelBuilder.Entity<Producto>()
                 .HasOne(p => p.Proveedor)
                 .WithMany(pr => pr.Productos)
                 .HasForeignKey(p => p.IdProveedor)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Relación Producto -> Categoría
+            // Relación: Producto -> Categoría
             modelBuilder.Entity<Producto>()
                 .HasOne(p => p.Categoria)
                 .WithMany(c => c.Productos)
                 .HasForeignKey(p => p.IdCategoria)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Relación: Pedido -> Cliente
+            modelBuilder.Entity<Pedido>()
+                .HasOne(p => p.Cliente)
+                .WithMany(c => c.Pedidos)
+                .HasForeignKey(p => p.IdCliente)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Relación: Pedido -> Producto
+            modelBuilder.Entity<Pedido>()
+                .HasOne(p => p.Producto)
+                .WithMany(pr => pr.Pedidos)
+                .HasForeignKey(p => p.IdProducto)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

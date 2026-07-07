@@ -1,6 +1,8 @@
 using CoreFlow_Backend.Models;
 using CoreFlow_Backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace CoreFlow_Backend.Controllers
 {
@@ -24,7 +26,6 @@ namespace CoreFlow_Backend.Controllers
         public async Task<ActionResult> Get()
         {
             var productos = await _productoService.ObtenerTodos();
-
             var respuesta = productos.Select(p => new
             {
                 p.IdProducto,
@@ -32,13 +33,10 @@ namespace CoreFlow_Backend.Controllers
                 p.Descripcion,
                 p.Precio,
                 p.Stock,
-
                 p.IdProveedor,
                 p.NombreProveedor,
-
                 p.IdCategoria,
                 p.NombreCategoria,
-
                 p.Estado
             });
 
@@ -53,10 +51,7 @@ namespace CoreFlow_Backend.Controllers
 
             if (p == null)
             {
-                return NotFound(new
-                {
-                    mensaje = $"El producto con ID {id} no fue encontrado."
-                });
+                return NotFound(new { mensaje = $"El producto con ID {id} no fue encontrado." });
             }
 
             var respuesta = new
@@ -66,13 +61,10 @@ namespace CoreFlow_Backend.Controllers
                 p.Descripcion,
                 p.Precio,
                 p.Stock,
-
                 p.IdProveedor,
                 p.NombreProveedor,
-
                 p.IdCategoria,
                 p.NombreCategoria,
-
                 p.Estado
             };
 
@@ -90,22 +82,11 @@ namespace CoreFlow_Backend.Controllers
             try
             {
                 var nuevo = await _productoService.Crear(producto);
-
-                return CreatedAtAction(
-                    nameof(Get),
-                    new { id = nuevo.IdProducto },
-                    new
-                    {
-                        mensaje = "Producto registrado correctamente.",
-                        datos = nuevo
-                    });
+                return Ok(new { mensaje = "Producto registrado correctamente.", producto = nuevo });
             }
-            catch (Exception ex)
+            catch (ValidationException ex)
             {
-                return BadRequest(new
-                {
-                    mensaje = ex.Message
-                });
+                return BadRequest(new { mensaje = ex.Message });
             }
         }
 
@@ -119,23 +100,14 @@ namespace CoreFlow_Backend.Controllers
 
                 if (!actualizado)
                 {
-                    return NotFound(new
-                    {
-                        mensaje = $"El producto con ID {id} no existe."
-                    });
+                    return NotFound(new { mensaje = $"El producto con ID {id} no existe." });
                 }
 
-                return Ok(new
-                {
-                    mensaje = "Producto actualizado correctamente."
-                });
+                return Ok(new { mensaje = "Producto actualizado correctamente." });
             }
-            catch (Exception ex)
+            catch (ValidationException ex)
             {
-                return BadRequest(new
-                {
-                    mensaje = ex.Message
-                });
+                return BadRequest(new { mensaje = ex.Message });
             }
         }
 
@@ -143,20 +115,25 @@ namespace CoreFlow_Backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var eliminado = await _productoService.Eliminar(id);
-
-            if (!eliminado)
+            try
             {
-                return NotFound(new
+                var eliminado = await _productoService.Eliminar(id);
+
+                if (!eliminado)
                 {
-                    mensaje = $"El producto con ID {id} no existe."
-                });
-            }
+                    return NotFound(new { mensaje = "Producto no encontrado." });
+                }
 
-            return Ok(new
+                return Ok(new { mensaje = "Producto eliminado correctamente." });
+            }
+            catch (DbUpdateException)
             {
-                mensaje = "Producto eliminado correctamente."
-            });
+                return BadRequest(new { mensaje = "No se puede eliminar el producto porque está incluido en detalles de pedidos activos." });
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(new { mensaje = ex.Message });
+            }
         }
     }
 }

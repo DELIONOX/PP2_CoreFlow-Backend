@@ -82,6 +82,13 @@ namespace CoreFlow_Backend.Services
                 return false;
             }
 
+            bool tienePedidos = await _context.Pedidos.AnyAsync(p => p.IdProducto == id);
+
+            if (tienePedidos)
+            {
+                throw new ValidationException("No se puede eliminar el producto porque está registrado en uno o más pedidos.");
+            }
+
             _context.Productos.Remove(producto);
             await _context.SaveChangesAsync();
             return true;
@@ -94,41 +101,58 @@ namespace CoreFlow_Backend.Services
         private void ValidarProducto(Producto producto, int id = 0)
         {
             if (string.IsNullOrWhiteSpace(producto.NombreProducto))
+            {
                 throw new ValidationException("El nombre es obligatorio.");
+            }
 
             if (string.IsNullOrWhiteSpace(producto.Descripcion))
+            {
                 throw new ValidationException("La descripción es obligatoria.");
+            }
 
             if (producto.Precio <= 0)
+            {
                 throw new ValidationException("El precio debe ser mayor que cero.");
+            }
 
             if (producto.Stock < 0)
+            {
                 throw new ValidationException("El stock no puede ser negativo.");
+            }
 
             if (producto.IdProveedor <= 0)
+            {
                 throw new ValidationException("Seleccione un proveedor válido.");
+            }
 
-            bool proveedorExiste = _context.Proveedores
-                .Any(p => p.IdProveedor == producto.IdProveedor);
+            bool proveedorExiste = _context.Proveedores.Any(p => p.IdProveedor == producto.IdProveedor);
 
             if (!proveedorExiste)
+            {
                 throw new ValidationException("El proveedor seleccionado no existe.");
+            }
 
             if (producto.IdCategoria <= 0)
+            {
                 throw new ValidationException("Seleccione una categoría válida.");
+            }
 
-            bool categoriaExiste = _context.Categorias
-                .Any(c => c.IdCategoria == producto.IdCategoria);
+            bool categoriaExiste = _context.Categorias.Any(c => c.IdCategoria == producto.IdCategoria);
 
             if (!categoriaExiste)
+            {
                 throw new ValidationException("La categoría seleccionada no existe.");
+            }
 
-            bool productoDuplicado = _context.Productos.Any(p =>
-                p.NombreProducto.ToLower() == producto.NombreProducto.ToLower()
-                && p.IdProducto != id);
+            bool productoDuplicado = _context.Productos
+            .Any(p => p.NombreProducto
+            .ToLower() == producto.NombreProducto
+            .ToLower() && p.IdProducto != id);
 
             if (productoDuplicado)
+            {
                 throw new ValidationException("Ya existe un producto con ese nombre.");
+            }
         }
     }
 }

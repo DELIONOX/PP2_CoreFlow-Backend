@@ -1,6 +1,7 @@
 using CoreFlow_Backend.Data;
 using CoreFlow_Backend.Models;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace CoreFlow_Backend.Services
 {
@@ -13,66 +14,81 @@ namespace CoreFlow_Backend.Services
             _context = context;
         }
 
-        // GET: Obtener todos los pedidos
+        // =====================================
+        // Métodos de Consulta (Queries)
+        // =====================================
+
         public async Task<List<Pedido>> ObtenerTodos()
         {
             return await _context.Pedidos.ToListAsync();
         }
 
-        // GET: Obtener un pedido por ID
         public async Task<Pedido?> ObtenerPorId(int id)
         {
             return await _context.Pedidos.FindAsync(id);
         }
 
-        // POST: Crear un nuevo pedido
+        // =====================================
+        // Métodos de Persistencia (Mutaciones)
+        // =====================================
+
         public async Task<Pedido> Crear(Pedido pedido)
         {
-            var producto = await _context.Productos
-                .FirstOrDefaultAsync(p => p.IdProducto == pedido.IdProducto);
+            var producto = await _context.Productos.FirstOrDefaultAsync(p => p.IdProducto == pedido.IdProducto);
 
             if (producto == null)
-                throw new Exception("El producto no existe.");
+            {
+                throw new ValidationException("El producto seleccionado no existe.");
+            }
 
             if (producto.Stock < pedido.Cantidad)
-                throw new Exception("Stock insuficiente.");
+            {
+                throw new ValidationException($"Stock insuficiente para el producto: {producto.NombreProducto}.");
+            }
 
-            // Cálculos y actualización de stock
             pedido.Total = producto.Precio * pedido.Cantidad;
             producto.Stock -= pedido.Cantidad;
 
             _context.Pedidos.Add(pedido);
             await _context.SaveChangesAsync();
-
             return pedido;
         }
 
-        // PUT: Actualizar un pedido existente
         public async Task<bool> Actualizar(int id, Pedido pedido)
         {
             var pedidoExistente = await _context.Pedidos.FindAsync(id);
-            if (pedidoExistente == null) return false;
 
-            var productoNuevo = await _context.Productos
-                .FirstOrDefaultAsync(p => p.IdProducto == pedido.IdProducto);
+            if (pedidoExistente == null)
+            {
+                return false;
+            }
+
+            var productoNuevo = await _context.Productos.FirstOrDefaultAsync(p => p.IdProducto == pedido.IdProducto);
 
             if (productoNuevo == null)
-                throw new Exception("El producto no existe.");
+            {
+                throw new ValidationException("El producto seleccionado no existe.");
+            }
 
-            // Devolver stock al producto anterior si aplica
-            var productoAnterior = await _context.Productos
-                .FirstOrDefaultAsync(p => p.IdProducto == pedidoExistente.IdProducto);
+            var productoAnterior = await _context.Productos.FirstOrDefaultAsync(p => p.IdProducto == pedidoExistente.IdProducto);
 
             if (productoAnterior != null)
+            {
                 productoAnterior.Stock += pedidoExistente.Cantidad;
+            }
 
-            // Validar y descontar stock del nuevo producto
             if (productoNuevo.Stock < pedido.Cantidad)
-                throw new Exception("Stock insuficiente.");
+            {
+                if (productoAnterior != null)
+                {
+                    productoAnterior.Stock -= pedidoExistente.Cantidad;
+                }
+
+                throw new ValidationException($"Stock insuficiente para el producto: {productoNuevo.NombreProducto}.");
+            }
 
             productoNuevo.Stock -= pedido.Cantidad;
 
-            // Mapeo de datos actualizados
             pedidoExistente.IdCliente = pedido.IdCliente;
             pedidoExistente.IdProducto = pedido.IdProducto;
             pedidoExistente.FechaPedido = pedido.FechaPedido;
@@ -83,22 +99,24 @@ namespace CoreFlow_Backend.Services
             return true;
         }
 
-        // DELETE: Eliminar un pedido
         public async Task<bool> Eliminar(int id)
         {
             var pedido = await _context.Pedidos.FindAsync(id);
-            if (pedido == null) return false;
 
-            // Devolver el stock retenido por el pedido
-            var producto = await _context.Productos
-                .FirstOrDefaultAsync(p => p.IdProducto == pedido.IdProducto);
+            if (pedido == null)
+            {
+                return false;
+            }
+
+            var producto = await _context.Productos.FirstOrDefaultAsync(p => p.IdProducto == pedido.IdProducto);
 
             if (producto != null)
+            {
                 producto.Stock += pedido.Cantidad;
+            }
 
             _context.Pedidos.Remove(pedido);
             await _context.SaveChangesAsync();
-
             return true;
         }
     }

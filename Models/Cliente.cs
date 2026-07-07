@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace CoreFlow_Backend.Models
 {
@@ -9,6 +10,8 @@ namespace CoreFlow_Backend.Models
         public string Apellido { get; set; }=string.Empty;
         public string Correo { get; set; }=string.Empty;
         public string Telefono { get; set; }=string.Empty;
+        [JsonIgnore]
+        public ICollection<Pedido> Pedidos { get; set; } = new List<Pedido>();
     }
 }
 

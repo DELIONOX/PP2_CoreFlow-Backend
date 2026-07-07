@@ -10,7 +10,6 @@ namespace CoreFlow_Backend.Models
         public string Descripcion { get; set; } = string.Empty;
         public decimal Precio { get; set; }
         public int Stock { get; set; }
-
         public int IdProveedor { get; set; }
         public int IdCategoria { get; set; }
 
@@ -25,8 +24,11 @@ namespace CoreFlow_Backend.Models
         [JsonIgnore]
         public Categoria? Categoria { get; set; }
 
+        [JsonIgnore]
+        public ICollection<Pedido> Pedidos { get; set; } = new List<Pedido>();
+
         // =====================================
-        // Propiedades Calculadas (No Mapeadas)
+        // Propiedades Calculadas
         // =====================================
         [NotMapped]
         public string Estado

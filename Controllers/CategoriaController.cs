@@ -1,6 +1,7 @@
 using CoreFlow_Backend.Models;
 using CoreFlow_Backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace CoreFlow_Backend.Controllers
@@ -16,14 +17,14 @@ namespace CoreFlow_Backend.Controllers
             _categoriaService = categoriaService;
         }
 
-        // GET
+        // GET: api/Categoria
         [HttpGet]
         public async Task<ActionResult<List<Categoria>>> Get()
         {
             return await _categoriaService.ObtenerTodos();
         }
 
-        // GET ID
+        // GET: api/Categoria/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Categoria>> Get(int id)
         {
@@ -37,7 +38,7 @@ namespace CoreFlow_Backend.Controllers
             return categoria;
         }
 
-        // POST
+        // POST: api/Categoria
         [HttpPost]
         public async Task<ActionResult<Categoria>> Post([FromBody] Categoria categoria)
         {
@@ -56,7 +57,7 @@ namespace CoreFlow_Backend.Controllers
             }
         }
 
-        // PUT
+        // PUT: api/Categoria/5
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Categoria categoria)
         {
@@ -77,7 +78,7 @@ namespace CoreFlow_Backend.Controllers
             }
         }
 
-        // DELETE
+        // DELETE: api/Categoria/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -91,6 +92,10 @@ namespace CoreFlow_Backend.Controllers
                 }
 
                 return Ok(new { mensaje = "Categoría eliminada correctamente." });
+            }
+            catch (DbUpdateException)
+            {
+                return BadRequest(new { mensaje = "No se puede eliminar la categoría porque tiene productos asociados." });
             }
             catch (ValidationException ex)
             {

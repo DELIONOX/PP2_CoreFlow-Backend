@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoreFlow_Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260704031124_Inicial")]
+    [Migration("20260706212700_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -103,6 +103,10 @@ namespace CoreFlow_Backend.Migrations
 
                     b.HasKey("IdPedido");
 
+                    b.HasIndex("IdCliente");
+
+                    b.HasIndex("IdProducto");
+
                     b.ToTable("Pedidos");
                 });
 
@@ -172,6 +176,25 @@ namespace CoreFlow_Backend.Migrations
                     b.ToTable("Proveedores");
                 });
 
+            modelBuilder.Entity("CoreFlow_Backend.Models.Pedido", b =>
+                {
+                    b.HasOne("CoreFlow_Backend.Models.Cliente", "Cliente")
+                        .WithMany("Pedidos")
+                        .HasForeignKey("IdCliente")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CoreFlow_Backend.Models.Producto", "Producto")
+                        .WithMany("Pedidos")
+                        .HasForeignKey("IdProducto")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Cliente");
+
+                    b.Navigation("Producto");
+                });
+
             modelBuilder.Entity("CoreFlow_Backend.Models.Producto", b =>
                 {
                     b.HasOne("CoreFlow_Backend.Models.Categoria", "Categoria")
@@ -194,6 +217,16 @@ namespace CoreFlow_Backend.Migrations
             modelBuilder.Entity("CoreFlow_Backend.Models.Categoria", b =>
                 {
                     b.Navigation("Productos");
+                });
+
+            modelBuilder.Entity("CoreFlow_Backend.Models.Cliente", b =>
+                {
+                    b.Navigation("Pedidos");
+                });
+
+            modelBuilder.Entity("CoreFlow_Backend.Models.Producto", b =>
+                {
+                    b.Navigation("Pedidos");
                 });
 
             modelBuilder.Entity("CoreFlow_Backend.Models.Proveedor", b =>

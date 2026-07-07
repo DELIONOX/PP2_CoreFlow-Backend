@@ -1,6 +1,7 @@
 using CoreFlow_Backend.Models;
 using CoreFlow_Backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace CoreFlow_Backend.Controllers
@@ -20,7 +21,7 @@ namespace CoreFlow_Backend.Controllers
         // Métodos de Consulta (Queries)
         // =====================================
 
-        // GET
+        // GET: api/Proveedor
         [HttpGet]
         public async Task<ActionResult<List<Proveedor>>> Get()
         {
@@ -28,7 +29,7 @@ namespace CoreFlow_Backend.Controllers
             return Ok(proveedores);
         }
 
-        // GET ID
+        // GET: api/Proveedor/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Proveedor>> Get(int id)
         {
@@ -36,10 +37,7 @@ namespace CoreFlow_Backend.Controllers
 
             if (proveedor == null)
             {
-                return NotFound(new
-                {
-                    mensaje = $"No existe el proveedor con ID {id}."
-                });
+                return NotFound(new { mensaje = "Proveedor no encontrado." });
             }
 
             return Ok(proveedor);
@@ -49,40 +47,22 @@ namespace CoreFlow_Backend.Controllers
         // Métodos de Persistencia (Mutaciones)
         // =====================================
 
-        // POST
+        // POST: api/Proveedor
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] Proveedor proveedor)
         {
             try
             {
                 var nuevo = await _proveedorService.Crear(proveedor);
-
-                return CreatedAtAction(
-                    nameof(Get),
-                    new { id = nuevo.IdProveedor },
-                    new
-                    {
-                        mensaje = "Proveedor registrado correctamente.",
-                        datos = nuevo
-                    });
+                return Ok(new { mensaje = "Proveedor registrado correctamente.", proveedor = nuevo });
             }
             catch (ValidationException ex)
             {
-                return BadRequest(new
-                {
-                    mensaje = ex.Message
-                });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new
-                {
-                    mensaje = ex.Message
-                });
+                return BadRequest(new { mensaje = ex.Message });
             }
         }
 
-        // PUT
+        // PUT: api/Proveedor/5
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Proveedor proveedor)
         {
@@ -92,34 +72,18 @@ namespace CoreFlow_Backend.Controllers
 
                 if (!actualizado)
                 {
-                    return NotFound(new
-                    {
-                        mensaje = $"No existe el proveedor con ID {id}."
-                    });
+                    return NotFound(new { mensaje = "Proveedor no encontrado." });
                 }
 
-                return Ok(new
-                {
-                    mensaje = "Proveedor actualizado correctamente."
-                });
+                return Ok(new { mensaje = "Proveedor actualizado correctamente." });
             }
             catch (ValidationException ex)
             {
-                return BadRequest(new
-                {
-                    mensaje = ex.Message
-                });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new
-                {
-                    mensaje = ex.Message
-                });
+                return BadRequest(new { mensaje = ex.Message });
             }
         }
 
-        // DELETE
+        // DELETE: api/Proveedor/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -129,30 +93,18 @@ namespace CoreFlow_Backend.Controllers
 
                 if (!eliminado)
                 {
-                    return NotFound(new
-                    {
-                        mensaje = $"No existe el proveedor con ID {id}."
-                    });
+                    return NotFound(new { mensaje = "Proveedor no encontrado." });
                 }
 
-                return Ok(new
-                {
-                    mensaje = "Proveedor eliminado correctamente."
-                });
+                return Ok(new { mensaje = "Proveedor eliminado correctamente." });
+            }
+            catch (DbUpdateException)
+            {
+                return BadRequest(new { mensaje = "No se puede eliminar el proveedor porque tiene productos asociados." });
             }
             catch (ValidationException ex)
             {
-                return BadRequest(new
-                {
-                    mensaje = ex.Message
-                });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new
-                {
-                    mensaje = ex.Message
-                });
+                return BadRequest(new { mensaje = ex.Message });
             }
         }
     }

@@ -43,23 +43,6 @@ namespace CoreFlow_Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Pedidos",
-                columns: table => new
-                {
-                    IdPedido = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FechaPedido = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Cantidad = table.Column<int>(type: "int", nullable: false),
-                    Total = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    IdCliente = table.Column<int>(type: "int", nullable: false),
-                    IdProducto = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Pedidos", x => x.IdPedido);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Proveedores",
                 columns: table => new
                 {
@@ -105,6 +88,45 @@ namespace CoreFlow_Backend.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Pedidos",
+                columns: table => new
+                {
+                    IdPedido = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FechaPedido = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Cantidad = table.Column<int>(type: "int", nullable: false),
+                    Total = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    IdCliente = table.Column<int>(type: "int", nullable: false),
+                    IdProducto = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pedidos", x => x.IdPedido);
+                    table.ForeignKey(
+                        name: "FK_Pedidos_Clientes_IdCliente",
+                        column: x => x.IdCliente,
+                        principalTable: "Clientes",
+                        principalColumn: "IdCliente",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Pedidos_Productos_IdProducto",
+                        column: x => x.IdProducto,
+                        principalTable: "Productos",
+                        principalColumn: "IdProducto",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pedidos_IdCliente",
+                table: "Pedidos",
+                column: "IdCliente");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pedidos_IdProducto",
+                table: "Pedidos",
+                column: "IdProducto");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Productos_IdCategoria",
                 table: "Productos",
@@ -120,10 +142,10 @@ namespace CoreFlow_Backend.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Clientes");
+                name: "Pedidos");
 
             migrationBuilder.DropTable(
-                name: "Pedidos");
+                name: "Clientes");
 
             migrationBuilder.DropTable(
                 name: "Productos");
