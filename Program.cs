@@ -13,7 +13,9 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
                 "http://localhost:4200",
-                "https://tu-app-angular.onrender.com"
+                
+                //Enlace de Render del Frontend (CORS)
+                "https://pp2-coreflow-frontend.onrender.com"
               )
               .AllowAnyHeader()
               .AllowAnyMethod();
